@@ -1,0 +1,149 @@
+
+#include <Servo.h>
+#include <Oscillator.h>
+
+
+
+#define INTERVALTIME 10.0
+
+#define N_SERVOS 4
+Oscillator servo[N_SERVOS];
+//garra
+
+
+Servo myservo1;
+Servo myservo2;
+Servo myservo3;
+Servo myservo4;
+
+
+int incomingByte;
+
+String incomingString;
+ int lastpos1 = 90;
+  int lastpos2 = 90;
+  int lastpos3 = 90;
+  int lastpos4 = 90;
+
+// LED connected to digital pin 13
+
+
+void setup()
+{
+
+
+  pinMode(3, OUTPUT);
+  pinMode(4, OUTPUT);
+  pinMode(5, OUTPUT);
+  pinMode(6, OUTPUT);
+
+  Serial.begin(9600);
+
+  myservo1.attach(3);
+  myservo2.attach(4);
+  myservo3.attach(5);
+  myservo4.attach(6);
+
+  myservo1.write(90);
+  myservo2.write(90);
+  myservo3.write(90);
+  myservo4.write(90);
+
+ 
+
+ 
+
+
+
+
+  // sets the digital pin as output
+}
+
+int value;
+int command;
+
+void loop()
+{
+
+  if (Serial.available()  > 0) {
+    // read the incoming byte:
+    incomingString = Serial.readString();
+
+    command = incomingString.substring(0,1).toInt();
+    value =  incomingString.substring(1).toInt();
+
+    
+    Serial.println(command);
+
+     Serial.println( value);
+
+    act ( command,value ) ;
+
+  } else {
+
+
+
+  }
+  delay(100);
+  Serial.flush();
+
+
+}
+
+void mv ( int a, int b, Servo myservo ) {
+
+Serial.println ("movendo de " + String (a) + "a "+String (b));
+  if (a < b ) {
+
+    for (int i = a ; i < b  ; i++ ) {
+
+      myservo.write(i);
+    
+      delay (40);
+    }
+  } else {
+
+    for (int i = a ; i > b  ; i-- ) {
+
+      myservo.write(i);
+
+      delay (40);
+
+    }
+  }
+}
+
+void act (int command, int value) {
+
+  switch (command) {
+    
+    case 1:
+      //motor1
+      Serial.println ("coomand" + String(command));
+      Serial.println ("Motor 1 ");
+      Serial.println ("Value " + String(value));
+      mv ( lastpos1 , lastpos1 + value, myservo1 );
+      lastpos1 = lastpos1 + value;
+      break;
+    case 2:
+      //motor2
+      Serial.println ("coomand" + String(command));
+       Serial.println ("Motor 2 " );
+    //  mv ( lastpos2 , lastpos2 + value, myservo2 );
+      break;
+    case 3:
+      //motor3
+      Serial.println ("coomand" + String(command));
+     Serial.println ("Motor 3 " );
+      //mv ( lastpos3 , lastpos3 + value, myservo3 );
+      break;
+    case 4:
+      //motor4
+      Serial.println ("coomand" + String(command));
+       Serial.println ("Motor 4 " );
+     // mv ( lastpos4 , lastpos4 + value, myservo4 );
+      break;
+
+
+  }
+}
